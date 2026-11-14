@@ -1,0 +1,79 @@
+{
+  "name": "tide",
+  "productName": "Tide",
+  "version": "1.2.0",
+  "description": "Tide — a compact liquid-glass desktop to-do widget for Windows, with a live theme studio.",
+  "main": "main.js",
+  "private": true,
+  "homepage": "https://github.com/Enkrid-Rao/LiquidGlassTodo#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enkrid-Rao/LiquidGlassTodo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Enkrid-Rao/LiquidGlassTodo/issues"
+  },
+  "author": "Xinxing Rao <xinxingrao@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "electron",
+    "desktop",
+    "todo",
+    "to-do",
+    "widget",
+    "liquid-glass",
+    "windows"
+  ],
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check src/app.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^45.3.1",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.tide.widget",
+    "productName": "Tide",
+    "copyright": "Copyright © 2026 Xinxing Rao",
+    "asar": true,
+    "electronLanguages": [
+      "en-US",
+      "en-GB",
+      "zh-CN"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "artifactName": "Tide-${version}-win-${arch}.${ext}",
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "Tide-${version}-portable.exe"
+    }
+  }
+}

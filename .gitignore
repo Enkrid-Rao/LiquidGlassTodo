@@ -1,0 +1,16 @@
+node_modules/
+dist/
+out/
+*.log
+.DS_Store
+Thumbs.db
+
+# Local scratch space (screenshots, probes) — never committed
+_tmp/
+_shot*.png
+
+# Windows shortcut with an absolute local path — useless on another machine
+/Tide.lnk
+
+# Agent conventions that only exist on one machine
+/AGENTS.md

@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#06120f">
+  <meta name="description" content="Tide — a compact liquid-glass desktop to-do widget.">
+  <title>Tide — open tasks, kept close</title>
+  <link rel="icon" type="image/png" href="../assets/icon.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-check" viewBox="0 0 16 16">
+      <path d="M3.1 8.4 6.3 11.5 12.9 4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16">
+      <path d="M8 3.2v9.6M3.2 8h9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 16 16">
+      <path d="M3.5 8h8.7M8.7 4.2 12.5 8l-3.8 3.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 16 16">
+      <path d="M5.2 2.1h5.6v5l1.4 1.7H3.8l1.4-1.7v-5Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M8 8.8v5.1" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-minus" viewBox="0 0 16 16">
+      <path d="M3.5 8h9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 16 16">
+      <path d="m4.2 4.2 7.6 7.6M11.8 4.2l-7.6 7.6" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 16 16">
+      <path d="M2.8 4.4h10.4M2.8 8h10.4M2.8 11.6h10.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="6" cy="4.4" r="1.55" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="10.3" cy="8" r="1.55" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="6.9" cy="11.6" r="1.55" fill="none" stroke="currentColor" stroke-width="1.2"/>
+    </symbol>
+    <symbol id="i-pencil" viewBox="0 0 16 16">
+      <path d="m3.2 10.7-.7 2.8 2.8-.7 6.9-6.9-2.1-2.1-6.9 6.9ZM8.8 5.1l2.1 2.1" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 16 16">
+      <path d="M3.2 4.5h9.6M6.2 4.5V3.1h3.6v1.4M4.5 4.5l.6 8.2h5.8l.6-8.2M6.6 7v3.2M9.4 7v3.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-undo" viewBox="0 0 16 16">
+      <path d="M5.2 5.3H2.9v-2.4M3.2 5.1a5.2 5.2 0 1 1-.6 5.2" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+
+  <div class="app">
+    <main class="widget" id="widget" aria-label="Tide desktop to-do widget">
+      <span class="widget__atmosphere" aria-hidden="true"></span>
+      <span class="widget__grain" aria-hidden="true"></span>
+      <span class="widget__halo" aria-hidden="true"></span>
+      <span class="widget__bloom" aria-hidden="true"></span>
+      <span class="widget__noise" aria-hidden="true"></span>
+      <span class="widget__rim" aria-hidden="true"></span>
+
+      <header class="topbar">
+        <div class="brand" aria-label="Tide">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10.4" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.28)" stroke-width=".8"/>
+              <path d="M5.1 13.6c2.2-2.6 4.4-2.6 6.5-.1 2.1 2.5 4.4 2.4 7.1-.4" fill="none" stroke="url(#brand-stroke)" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="16.7" cy="8.1" r="1.8" fill="var(--accent-2)"/>
+              <defs>
+                <linearGradient id="brand-stroke" x1="4" y1="12" x2="20" y2="12" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="var(--accent-pale)"/><stop offset="1" stop-color="var(--accent)"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span class="brand__word">tide</span>
+          <span class="brand__badge">todo</span>
+        </div>
+
+        <div class="topbar__actions">
+          <button class="win-btn settings-trigger" id="settingsBtn" type="button" aria-label="Customize Tide" aria-haspopup="dialog" aria-expanded="false" aria-controls="studio" title="Customize">
+            <svg width="14" height="14" aria-hidden="true"><use href="#i-settings"/></svg>
+          </button>
+          <div class="window-controls" id="windowControls" aria-label="Window controls">
+            <button class="win-btn" id="winPin" type="button" aria-label="Keep window on top" aria-pressed="false" title="Keep on top">
+              <svg width="14" height="14" aria-hidden="true"><use href="#i-pin"/></svg>
+            </button>
+            <button class="win-btn" id="winMin" type="button" aria-label="Minimize window" title="Minimize">
+              <svg width="14" height="14" aria-hidden="true"><use href="#i-minus"/></svg>
+            </button>
+            <button class="win-btn win-btn--close" id="winClose" type="button" aria-label="Close window" title="Close">
+              <svg width="14" height="14" aria-hidden="true"><use href="#i-close"/></svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <section class="studio" id="studio" role="dialog" aria-label="Customize Tide" aria-hidden="true" inert>
+        <span class="studio__grabber" aria-hidden="true"></span>
+
+        <div class="studio__head">
+          <div>
+            <p class="eyebrow">Customize</p>
+            <p class="studio__title">Make it yours.</p>
+          </div>
+          <button class="icon-btn studio__close" id="studioClose" type="button" aria-label="Close customize" title="Close">
+            <svg width="13" height="13" aria-hidden="true"><use href="#i-close"/></svg>
+          </button>
+        </div>
+
+        <div class="studio__tabs" id="studioTabs" role="tablist" aria-label="Customize sections">
+          <span class="studio__thumb" aria-hidden="true"></span>
+          <button class="studio__tab is-active" id="tabTheme" type="button" role="tab" aria-selected="true" aria-controls="paneTheme" data-tab="theme">Theme</button>
+          <button class="studio__tab" id="tabColor" type="button" role="tab" aria-selected="false" aria-controls="paneColor" tabindex="-1" data-tab="color">Color</button>
+          <button class="studio__tab" id="tabEffects" type="button" role="tab" aria-selected="false" aria-controls="paneEffects" tabindex="-1" data-tab="effects">Effects</button>
+          <button class="studio__tab" id="tabWindow" type="button" role="tab" aria-selected="false" aria-controls="paneWindow" tabindex="-1" data-tab="window">App</button>
+        </div>
+
+        <div class="studio__body" id="studioBody">
+          <div class="studio__pane is-active" id="paneTheme" role="tabpanel" aria-labelledby="tabTheme">
+            <p class="panel-label">Presets</p>
+            <div class="preset-grid" id="presetGrid" role="group" aria-label="Theme presets"></div>
+
+            <div class="panel-head">
+              <p class="panel-label">Atmosphere</p>
+              <label class="mini-toggle" title="Atmosphere">
+                <input class="row__input" id="optAtmosphere" type="checkbox" aria-label="Atmosphere">
+                <span class="switch switch--sm" aria-hidden="true"></span>
+              </label>
+            </div>
+            <div class="atmo-grid" id="atmoGrid" role="group" aria-label="Atmosphere style"></div>
+
+            <div class="field">
+              <div class="field__head">
+                <label class="field__name" for="optAtmoStrength">Intensity</label>
+                <output class="field__value" id="atmoStrengthValue" for="optAtmoStrength">92%</output>
+              </div>
+              <input class="range" id="optAtmoStrength" type="range" min="0" max="100" step="1" value="92">
+            </div>
+          </div>
+
+          <div class="studio__pane" id="paneColor" role="tabpanel" aria-labelledby="tabColor" hidden>
+            <p class="panel-label">Background</p>
+            <div class="swatch-row" id="tintGrid" role="group" aria-label="Background colour"></div>
+
+            <div class="field">
+              <div class="field__head">
+                <label class="field__name" for="optHue">Hue</label>
+                <output class="field__value" id="hueValue" for="optHue">165°</output>
+              </div>
+              <input class="range range--hue" id="optHue" type="range" min="0" max="359" step="1" value="165">
+            </div>
+
+            <div class="field">
+              <div class="field__head">
+                <label class="field__name" for="optTintSat">Tint strength</label>
+                <output class="field__value" id="tintSatValue" for="optTintSat">34%</output>
+              </div>
+              <input class="range" id="optTintSat" type="range" min="0" max="60" step="1" value="34">
+            </div>
+
+            <p class="panel-label">Accent</p>
+            <div class="swatch-row" id="accentGrid" role="group" aria-label="Accent colour"></div>
+
+            <div class="field">
+              <div class="field__head">
+                <label class="field__name" for="optAccentHue">Hue</label>
+                <output class="field__value" id="accentHueValue" for="optAccentHue">158°</output>
+              </div>
+              <input class="range range--hue" id="optAccentHue" type="range" min="0" max="359" step="1" value="158">
+            </div>
+
+            <div class="field">
+              <div class="field__head">
+                <label class="field__name" for="optGlassOpacity">Glass opacity</label>
+                <output class="field__value" id="glassOpacityValue" for="optGlassOpacity">82%</output>
+              </div>
+              <input class="range" id="optGlassOpacity" type="range" min="30" max="100" step="1" value="82">
+            </div>
+          </div>
+
+          <div class="studio__pane" id="paneEffects" role="tabpanel" aria-labelledby="tabEffects" hidden>
+            <label class="row row--first">
+              <span class="row__copy">
+                <span class="row__name">Halo</span>
+                <span class="row__note">Top-left light across the glass</span>
+              </span>
+              <input class="row__input" id="optHalo" type="checkbox" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <div class="field" id="haloStrengthField">
+              <div class="field__head">
+                <label class="field__name" for="optHaloStrength">Halo strength</label>
+                <output class="field__value" id="haloStrengthValue" for="optHaloStrength">70%</output>
+              </div>
+              <input class="range" id="optHaloStrength" type="range" min="0" max="100" step="1" value="70">
+            </div>
+
+            <label class="row">
+              <span class="row__copy">
+                <span class="row__name">Cursor light</span>
+                <span class="row__note">Specular follows the pointer</span>
+              </span>
+              <input class="row__input" id="optCursorGlow" type="checkbox" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <label class="row">
+              <span class="row__copy">
+                <span class="row__name">Grain</span>
+                <span class="row__note">Soft light-field texture in the glass</span>
+              </span>
+              <input class="row__input" id="optGrain" type="checkbox" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <label class="row" id="driftRow">
+              <span class="row__copy">
+                <span class="row__name">Ambient drift <i>GPU</i></span>
+                <span class="row__note">Slow motion inside the atmosphere</span>
+              </span>
+              <input class="row__input" id="optAmbientDrift" type="checkbox">
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <div class="panel-divider"></div>
+
+            <label class="row">
+              <span class="row__copy">
+                <span class="row__name">Date line</span>
+                <span class="row__note">Date and time above the greeting</span>
+              </span>
+              <input class="row__input" id="optShowDate" type="checkbox" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <label class="row">
+              <span class="row__copy">
+                <span class="row__name">24-hour clock</span>
+                <span class="row__note">21:14 instead of 9:14 PM</span>
+              </span>
+              <input class="row__input" id="optClock24" type="checkbox" checked>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+          </div>
+
+          <div class="studio__pane" id="paneWindow" role="tabpanel" aria-labelledby="tabWindow" hidden>
+            <p class="panel-label">Window</p>
+
+            <label class="row row--first">
+              <span class="row__copy">
+                <span class="row__name">Keep on top</span>
+                <span class="row__note">Float above other windows</span>
+              </span>
+              <input class="row__input" id="optPin" type="checkbox">
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <label class="row" id="startupRow">
+              <span class="row__copy">
+                <span class="row__name">Start with Windows</span>
+                <span class="row__note" id="startupNote">Open Tide when you sign in</span>
+              </span>
+              <input class="row__input" id="optStartAtLogin" type="checkbox" disabled>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <div class="pane-actions">
+              <button class="ghost-btn ghost-btn--quiet" id="resetPosition" type="button">Reset window position</button>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <p class="panel-label">Shortcuts</p>
+            <div class="shortcut-list">
+              <p class="shortcut"><span class="shortcut__keys"><kbd>Ctrl</kbd><kbd>K</kbd></span>Focus the add field</p>
+              <p class="shortcut"><span class="shortcut__keys"><kbd>Enter</kbd></span>Add the task</p>
+              <p class="shortcut"><span class="shortcut__keys"><kbd>Esc</kbd></span>Close panels, clear input</p>
+              <p class="shortcut"><span class="shortcut__keys"><kbd>←</kbd><kbd>→</kbd></span>Switch Open / All / Done</p>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <p class="panel-note">Tide keeps tasks, theme and window position on this PC. Nothing leaves your desktop.</p>
+            <button class="ghost-btn" id="studioReset" type="button">Reset appearance</button>
+          </div>
+        </div>
+
+        <p class="studio__foot"><span class="status-dot" aria-hidden="true"></span>Changes save locally<span class="studio__version" id="studioVersion">dev</span></p>
+      </section>
+
+      <div class="widget__body">
+        <section class="intro" aria-labelledby="greeting">
+          <div class="intro__meta">
+            <p class="eyebrow intro__date" id="todayLabel">Thursday, 12 November</p>
+            <p class="intro__clock" id="clockTime">21:14</p>
+          </div>
+
+          <h1 class="intro__greeting" id="greeting">Good evening.</h1>
+          <p class="intro__lede" id="lede">Five small things, one at a time.</p>
+
+          <div class="progress-block">
+            <div class="progress-figure" aria-hidden="true">
+              <span id="donePct">29</span><i>%</i>
+            </div>
+            <div class="progress-info">
+              <div class="progress-head">
+                <span class="eyebrow">Today</span>
+                <span class="progress-copy"><span id="doneCount">2 done</span><b>·</b><span id="leftCount">5 to go</span></span>
+              </div>
+              <div class="progress-track" id="progressTrack" role="progressbar" aria-label="Tasks completed today" aria-valuemin="0" aria-valuemax="100" aria-valuenow="29">
+                <span class="progress-fill" id="progressFill"><i class="progress-bead"></i></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="workspace" aria-label="Open tasks">
+          <form class="composer" id="addForm" novalidate>
+            <span class="composer__plus" aria-hidden="true">
+              <svg width="14" height="14"><use href="#i-plus"/></svg>
+            </span>
+            <label class="sr-only" for="taskInput">Add a task</label>
+            <input class="composer__input" id="taskInput" name="task" type="text" maxlength="140" autocomplete="off" spellcheck="false" placeholder="Add a small thing…">
+            <button class="add-btn" id="addBtn" type="submit" disabled>
+              <span>Add</span>
+              <svg width="13" height="13" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </button>
+          </form>
+
+          <div class="workspace__bar">
+            <div class="filters" id="filters" role="group" aria-label="Filter tasks">
+              <span class="filters__thumb" aria-hidden="true"></span>
+              <button class="filter is-active" type="button" aria-pressed="true" aria-controls="taskList" tabindex="0" data-filter="open">Open</button>
+              <button class="filter" type="button" aria-pressed="false" aria-controls="taskList" tabindex="-1" data-filter="all">All</button>
+              <button class="filter" type="button" aria-pressed="false" aria-controls="taskList" tabindex="-1" data-filter="done">Done</button>
+            </div>
+            <p class="list-status" id="listStatus">5 open</p>
+          </div>
+
+          <div class="list-scroller" id="listScroller">
+            <ul class="task-list" id="taskList" aria-label="Open to-do list"></ul>
+            <div class="empty" id="empty" hidden>
+              <div class="empty__orb" aria-hidden="true">
+                <span></span><i></i>
+              </div>
+              <h2 class="empty__title" id="emptyTitle">All clear.</h2>
+              <p class="empty__copy" id="emptyCopy">Nothing open. Leave it that way a little longer.</p>
+            </div>
+          </div>
+
+          <footer class="workspace__foot">
+            <button class="text-btn" id="clearDone" type="button">Clear completed</button>
+            <p class="key-hint"><span class="keycap" id="modKey">Ctrl</span><span class="keycap">K</span><span>to add</span></p>
+          </footer>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <template id="taskTemplate">
+    <li class="task">
+      <label class="task__toggle">
+        <input class="task__checkbox" type="checkbox">
+        <span class="task__box">
+          <svg class="task__check" width="13" height="13" aria-hidden="true"><use href="#i-check"/></svg>
+          <i class="task__ripple" aria-hidden="true"></i>
+        </span>
+      </label>
+      <span class="task__text"></span>
+      <div class="task__actions">
+        <button class="icon-btn task__edit" type="button" aria-label="Edit task" title="Edit">
+          <svg width="14" height="14" aria-hidden="true"><use href="#i-pencil"/></svg>
+        </button>
+        <button class="icon-btn task__delete" type="button" aria-label="Delete task" title="Delete">
+          <svg width="14" height="14" aria-hidden="true"><use href="#i-trash"/></svg>
+        </button>
+      </div>
+    </li>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>

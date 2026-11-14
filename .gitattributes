@@ -1,0 +1,14 @@
+# Text files are stored with LF in the repository and checked out per platform
+* text=auto
+
+# Binary assets: keep bytes untouched so diffs stay sane
+*.png  binary
+*.jpg  binary
+*.webp binary
+*.ico  binary
+*.woff2 binary
+*.exe  binary
+*.zip  binary
+
+# Lock files are regenerated, not merged
+package-lock.json merge=binary
